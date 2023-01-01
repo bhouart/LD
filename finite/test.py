@@ -26,27 +26,28 @@ class Finite():
     def f_c(self, k):
         res = 0
         for j in range(self.N):
-            if k > 0 and self.Z-k > 0:
+            if k > 0 and self.Z-k >= 0:
                 res += math.comb(k-1, j)*math.comb(self.Z-k, self.N-j-1)*self.pi_c(j+1)
-
         return (1/math.comb(self.Z-1, self.N-1))*res 
 
     def f_d(self, k):
         res = 0
         for j in range(self.N):
-            if k > 0 and self.Z-k-1 > 0:
+            if k > 0 and self.Z-k-1 >= 0:
                 res += math.comb(k,j)*math.comb(self.Z-k-1,self.N-j-1)*self.pi_d(j)
         return (1/math.comb(self.Z-1,self.N-1))*res
 
 
-    def transition_probabilities(self, k, coeff = 1):
-        return (k/self.Z) * ((self.Z-k)/self.Z) * (1/(1 + math.exp(coeff*self.beta*(self.f_c(k) - self.f_d(k)))))
+    def transition_probabilities(self, k, coeff):
+        return (k/self.Z) * ((self.Z-k)/self.Z) * (1/(1 + math.exp(coeff*self.beta*(self.f_c(k)-self.f_d(k)))))
 
 
-    def g1(self, k):
+    def g1(self, k, inf=False):
         #return self.transition_probabilities(k, -1) - self.transition_probabilities(k, 1)
-        return (k/self.Z)*((self.Z-k)/self.Z)*math.tanh((self.beta/2)*(self.f_c(k) - self.f_d(k)))
-
+        if not inf:
+            return (k/self.Z)*((self.Z-k)/self.Z)*math.tanh((self.beta/2)*(self.f_c(k)-self.f_d(k)))
+        else :
+            return 
 
     def g2(self, k):
         return (k/self.Z)*((self.Z-k)/self.Z)*math.tanh((self.beta/2)*(self.f_c_minus_f_d(k)))
@@ -62,8 +63,9 @@ class Finite():
 
 
 def Fig2_plot(z):
+
     finite = Finite(z, 0, 10, 12, 1, 0.9)
-    steps = np.array([i/z for i in range(0, z+1)])
+    steps = np.array([i/z for i in range(z+1)])
     y_value = np.zeros(z+1)
 
     for k in range(len(steps)):
@@ -74,7 +76,7 @@ def Fig2_plot(z):
 
 def Figure2():
     
-    z_array = np.array([20, 55, 640, 20000])
+    z_array = np.array([20, 55, 640, 1000000])
     for z in z_array:
         Fig2_plot(z)
     plt.legend()
@@ -82,18 +84,22 @@ def Figure2():
 
 
 def Fig3_plot(z, f):
+
     finite = Finite(z, 5, 10, f, 1, 0.9)
-    steps = np.array([i/z for i in range(0, z+1)])
+    steps = np.array([i/z for i in range(z+1)])
     y_value = np.zeros(z+1)
 
     for k in range(len(steps)):
         y_value[k] = finite.g1(k)
-
+        
+ 
     plt.plot(steps, y_value, label = str(z))
 
+
 def Figure3():
+
     f_array = [12, 8]
-    z_array = [10,20,40,100,500,100000]
+    z_array = [10, 20, 40, 100, 500, 1000000]
     for f in f_array:
         for z in z_array:
             Fig3_plot(z, f)
@@ -102,4 +108,3 @@ def Figure3():
 
 Figure2()
 Figure3()
-    
