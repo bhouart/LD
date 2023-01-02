@@ -62,7 +62,7 @@ class Finite():
 
 
 
-def Fig2_plot(z):
+def Fig2_plot(z, style = 'solid'):
 
     finite = Finite(z, 0, 10, 12, 1, 0.9)
     steps = np.array([i/z for i in range(z+1)])
@@ -71,19 +71,20 @@ def Fig2_plot(z):
     for k in range(len(steps)):
         y_value[k] = finite.g2(k)
 
-    plt.plot(steps, y_value, label = str(z))
+    plt.plot(steps, y_value, linestyle = style, label = str(z))
     
 
 def Figure2():
     
     z_array = np.array([20, 55, 640, 1000000])
-    for z in z_array:
-        Fig2_plot(z)
+    style_array = ['dotted', 'solid', 'dashed', 'dashdot']
+    for i in range(len(z_array)):
+        Fig2_plot(z_array[i], style_array[i])
     plt.legend()
     plt.show()
 
 
-def Fig3_plot(z, f):
+def Fig3_plot(z, f, style='solid'):
 
     finite = Finite(z, 5, 10, f, 1, 0.9)
     steps = np.array([i/z for i in range(z+1)])
@@ -93,18 +94,20 @@ def Fig3_plot(z, f):
         y_value[k] = finite.g1(k)
         
  
-    plt.plot(steps, y_value, label = str(z))
+    plt.plot(steps, y_value, linestyle=style, label = str(z))
 
 
 def Figure3():
-
+    
     f_array = [12, 8]
-    z_array = [10, 20, 40, 100, 500, 1000000]
+    z_array = [10, 20, 40, 100, 500, 10000]
+    style_array = ['solid', 'dotted', 'dashed', 'dashdot', 'solid', 'dotted']
     for f in f_array:
-        for z in z_array:
-            Fig3_plot(z, f)
+        plt.plot([i/10 for i in range(11)], [0 for _ in range(11)], linewidth='2', color='k')
+        for i in range(len(z_array)):
+            Fig3_plot(z_array[i], f, style_array[i])
         plt.legend()
         plt.show()
 
 Figure2()
-Figure3()
+#Figure3()
