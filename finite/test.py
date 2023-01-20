@@ -114,5 +114,9 @@ def Figure3():
         plt.savefig('Figure3_F{}.png'.format(f))
         plt.clf()
 
+
+
+
+plt.rcParams.update({'font.size': 11})
 Figure2()
 Figure3()
